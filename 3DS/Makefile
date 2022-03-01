@@ -40,8 +40,8 @@ GRAPHICS		:=	gfx
 #GFXBUILD		:=	$(BUILD)
 ROMFS			:=	romfs
 GFXBUILD		:=	$(ROMFS)/gfx
-APP_TITLE		:=	Circle Game Test
-APP_DESCRIPTION	:=	A game to test a physics engine built by Half-Qilin; will be improved continuously.
+APP_TITLE		:=	The Flightless Bird
+APP_DESCRIPTION	:=	Compiled with libctru and Citro2D!
 APP_AUTHOR		:=	Half-Qilin
 
 #---------------------------------------------------------------------------------
