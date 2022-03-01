@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# 3DS Build Files
+*.map
+*.lst
