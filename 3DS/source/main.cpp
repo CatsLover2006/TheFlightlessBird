@@ -143,7 +143,10 @@ class level {
         }
 
         level(ellipseObj** ellipseObjList, long ellipses, float playerStartX, float playerStartY, float playerSize, float maxY, float minY, float minX, float maxX, float endX, float endY, float endR, long exitTo) {
-            this->startEllipseObjs = ellipseObjList;
+            this->startEllipseObjs = new ellipseObj*[ellipses];
+            for (long j = 0; j < this->ellipses; j++) {
+                this->startEllipseObjs[j] = ellipseObjList[j];
+            }
             this->ellipseObjs = new ellipseObj*[ellipses];
             this->ellipses = ellipses;
             this->playerStartX = playerStartX;
@@ -195,7 +198,7 @@ int main(int argc, char * argv[]) {
     long levelIndex = 0;
 
     // Level Generation
-    ellipseObj* level1Ellipses[8] = {
+    ellipseObj* levelEllipses[128] = {
         new ellipseObj(440.0f, 980.0f, 80.0f, 40.0f),
         new ellipseObj(530.0f, 1000.0f, 80.0f, 80.0f),
         new ellipseObj(140.0f, 600.0f, 100.0f, 40.0f, 0.125f, -0.25f, 400l),
@@ -205,7 +208,7 @@ int main(int argc, char * argv[]) {
         new ellipseObj(500.0f, 720.0f, 50.0f, 25.0f),
         new ellipseObj(380.0f, 640.0f, 50.0f, 25.0f)
     };
-    levels[0] = new level(level1Ellipses, 8l, 440.0f, 940.0f, 10.0f, 1000.0f, 0.0f, 0.0f, 1000.0f, 190.0f, 440.0f, 10.0f, 0l);
+    levels[0] = new level(levelEllipses, 8l, 440.0f, 940.0f, 10.0f, 1000.0f, 0.0f, 0.0f, 1000.0f, 190.0f, 440.0f, 10.0f, 0l);
     levels[levelIndex]->startLevel();
 
     // Main loop
