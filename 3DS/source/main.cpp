@@ -144,11 +144,11 @@ class level {
 
         level(ellipseObj** ellipseObjList, long ellipses, float playerStartX, float playerStartY, float playerSize, float maxY, float minY, float minX, float maxX, float endX, float endY, float endR, long exitTo) {
             this->startEllipseObjs = new ellipseObj*[ellipses];
+            this->ellipseObjs = new ellipseObj*[ellipses];
+            this->ellipses = ellipses;
             for (long j = 0; j < this->ellipses; j++) {
                 this->startEllipseObjs[j] = ellipseObjList[j];
             }
-            this->ellipseObjs = new ellipseObj*[ellipses];
-            this->ellipses = ellipses;
             this->playerStartX = playerStartX;
             this->playerStartY = playerStartY;
             this->playerSize = playerSize;
