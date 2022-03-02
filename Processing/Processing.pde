@@ -35,6 +35,19 @@ class player {
         }
         return Math.abs(distX) < Math.abs(distY) * 2;
     }
+    
+    boolean uncollide(ellipseObj ellipseObj, float xMaintain) {
+        float distX = (this.x - ellipseObj.x) / ellipseObj.w;
+        float distY = (this.y - ellipseObj.y) / ellipseObj.h;
+        float mov = sqrt(distY * distY + distX * distX);
+        float movX = distX / mov * 0.01;
+        float movY = distY / mov * 0.01;
+        while (this.isColliding(ellipseObj)) {
+            this.x = xMaintain;
+            this.y += movY;
+        }
+        return Math.abs(distX) < Math.abs(distY) * 2;
+    }
 
     float getDistRatio(ellipseObj ellipseObj) {
         return ((this.x - ellipseObj.x) / ellipseObj.w) / ((this.y - ellipseObj.y) / ellipseObj.h);
@@ -199,6 +212,7 @@ void draw() {
                         playerObj.yMov = abs(playerObj.getDistRatio(ellipseObjs[j]));
                         timeToJump = 48;
                         playerObj.x = beforeX + ellipseObjs[j].movX;
+                        playerObj.uncollide(ellipseObjs[j], playerObj.x);
                         playerObj.y += ellipseObjs[j].movY;
                     }
                 } else {

@@ -98,6 +98,14 @@ class player {
             }
             return abs(distX) < abs(distY) * 2;
         }
+		
+		void uncollide(ellipseObj* ellipseObj, float maintainX) {
+            float distY = abs(this->y - ellipseObj->y) / (this->y - ellipseObj->y) * 0.01f;
+            while (this->isColliding(ellipseObj)) {
+                this->x = maintainX;
+                this->y += distY;
+            }
+        }
 
         float getDistRatio(ellipseObj* ellipseObj) {
             return ((this->x - ellipseObj->x) / ellipseObj->w) / ((this->y - ellipseObj->y) / ellipseObj->h);
@@ -234,6 +242,7 @@ int main(int argc, char * argv[]) {
                             playerObj->yMov = abs(playerObj->getDistRatio(levels[levelIndex]->ellipseObjs[j]));
                             timeToJump = 48;
                             playerObj->x = beforeX + levels[levelIndex]->ellipseObjs[j]->movX;
+							playerObj->uncollide(levels[levelIndex]->ellipseObjs[j], playerObj->x);
                             playerObj->y += levels[levelIndex]->ellipseObjs[j]->movY;
                         }
                     } else {
