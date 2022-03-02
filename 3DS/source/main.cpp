@@ -246,7 +246,7 @@ int main(int argc, char * argv[]) {
                             timeToJump = 48;
                             playerObj->x = beforeX + levels[levelIndex]->ellipseObjs[j]->movX;
 							playerObj->uncollide(levels[levelIndex]->ellipseObjs[j], playerObj->x);
-                            playerObj->y += levels[levelIndex]->ellipseObjs[j]->movY;
+                            playerObj->y += levels[levelIndex]->ellipseObjs[j]->movY>0?levels[levelIndex]->ellipseObjs[j]->movY:0;
                         }
                     } else {
                         if (playerObj->x > levels[levelIndex]->ellipseObjs[j]->x) playerObj->xMov = fmax(playerObj->xMov, 0);

@@ -213,7 +213,7 @@ void draw() {
                         timeToJump = 48;
                         playerObj.x = beforeX + ellipseObjs[j].movX;
                         playerObj.uncollide(ellipseObjs[j], playerObj.x);
-                        playerObj.y += ellipseObjs[j].movY;
+                        playerObj.y += max(ellipseObjs[j].movY, 0);
                     }
                 } else {
                     if (playerObj.x > ellipseObjs[j].x) playerObj.xMov = max(playerObj.xMov, 0);
