@@ -246,7 +246,7 @@ void draw() {
     pushMatrix();
     noStroke();
     lights();
-    translate(width/2-scrollX, height/2-scrollY, -100);
+    translate(width/2-scrollX, height/2-scrollY);
     background(66, 176, 245);
     fill(246, 250, 235);
     for (int j = 0; j < ellipseObjs.length; j++) {
