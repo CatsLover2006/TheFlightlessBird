@@ -176,7 +176,8 @@ int timeToJump = 0;
 
 void setup() {
     ellipseMode(RADIUS);
-    size(500, 500);
+    size(500, 500, P3D);
+    smooth(16);
     playerObj = new player(0,0,0);
     ellipseObj[] ellipseGenerator = {
         new ellipseObj(440, 980, 80, 40),
@@ -244,19 +245,34 @@ void draw() {
     scrollY = min(levels[levelIndex].maxY - height/2, max(levels[levelIndex].minY + height/2, scrollY));
     pushMatrix();
     noStroke();
-    translate(width/2-scrollX, height/2-scrollY);
+    lights();
+    translate(width/2-scrollX, height/2-scrollY, -100);
     background(66, 176, 245);
     fill(246, 250, 235);
     for (int j = 0; j < ellipseObjs.length; j++) {
-        ellipse(ellipseObjs[j].x, ellipseObjs[j].y, ellipseObjs[j].w, ellipseObjs[j].h);
+        pushMatrix();
+        translate(ellipseObjs[j].x, ellipseObjs[j].y, 0);
+        scale(ellipseObjs[j].w, ellipseObjs[j].h, min(ellipseObjs[j].w, ellipseObjs[j].h));
+        sphere(1);
+        popMatrix();
     }
     fill(224, 4, 195);
-    circle(playerObj.x, playerObj.y, playerObj.r);
+    pushMatrix();
+    translate(playerObj.x, playerObj.y, 0);
+    sphere(playerObj.r);
+    popMatrix();
     fill(224, 4, 195);
-    circle(levels[levelIndex].endX, levels[levelIndex].endY, levels[levelIndex].endR);
+    pushMatrix();
+    translate(levels[levelIndex].endX, levels[levelIndex].endY, 0);
+    sphere(levels[levelIndex].endR);
+    popMatrix();
     fill(246, 250, 235, 80);
     for (int j = 0; j < ellipseObjs.length; j++) {
-        ellipse(ellipseObjs[j].x, ellipseObjs[j].y, ellipseObjs[j].w + 10, ellipseObjs[j].h + 10);
+        pushMatrix();
+        translate(ellipseObjs[j].x, ellipseObjs[j].y, 0);
+        scale(ellipseObjs[j].w, ellipseObjs[j].h, min(ellipseObjs[j].w, ellipseObjs[j].h));
+        sphere(1);
+        popMatrix();
     }
     if (playerObj.isColliding(levels[levelIndex].endX, levels[levelIndex].endY, levels[levelIndex].endR)) {
       levelIndex = levels[levelIndex].exitTo;
