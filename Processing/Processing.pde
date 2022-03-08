@@ -60,6 +60,32 @@ class player {
     }
 }
 
+class visualObj {
+    float[] xValues;
+    float[] yValues;
+    float[] radii;
+    boolean[] onBack;
+    int count;
+    
+    public visualObj(float w, float h) {
+      count = floor(min (w, h))/10;
+      xValues = new float[count];
+      yValues = new float[count];
+      radii = new float[count];
+      onBack = new boolean[count];
+      for (int j = 0; j < count; j++) {
+        xValues[j] = random(w, -w);
+        yValues[j] = random(h, -h);
+        float len = sqrt(xValues[j] * xValues[j] +  yValues[j] * yValues[j]);
+        xValues[j] *= w/len;
+        yValues[j] *= h/len;
+        len = sqrt((xValues[j] *  xValues[j] +  yValues[j] * yValues[j]));
+        onBack[j] = random(-1, 1) > 0;
+        radii[j] = random(len/2, len/5);
+      }
+    }
+}
+
 class ellipseObj {
     float x;
     float y;
@@ -116,6 +142,8 @@ ellipseObj[] ellipseObjs;
 
 class level {
     ellipseObj[] ellipseObjsInternal;
+    visualObj[] visualObjs;
+    boolean isSetUp;
     float playerStartX, playerStartY, playerSize;
     float maxY, minX, maxX, minY;
     float endX, endY, endR;
@@ -134,9 +162,17 @@ class level {
         this.endX = endX;
         this.endR = endR;
         this.exitTo = exitTo;
+        isSetUp = false;
     }
 
     void startLevel() {
+        if (!isSetUp) {
+            visualObjs = new visualObj[ellipseObjsInternal.length];
+            for (int j = 0; j < ellipseObjsInternal.length; j++) {
+                visualObjs[j] = new visualObj(ellipseObjsInternal[j].w, ellipseObjsInternal[j].h);
+            }
+        }
+        isSetUp = true;
         playerObj.x = this.playerStartX;
         playerObj.y = this.playerStartY;
         playerObj.r = this.playerSize;
@@ -252,8 +288,16 @@ void draw() {
     for (int j = 0; j < ellipseObjs.length; j++) {
         pushMatrix();
         translate(ellipseObjs[j].x, ellipseObjs[j].y, 0);
+        pushMatrix();
         scale(ellipseObjs[j].w, ellipseObjs[j].h, min(ellipseObjs[j].w, ellipseObjs[j].h));
         sphere(1);
+        popMatrix();
+        for (int k = 0; k < levels[levelIndex].visualObjs[j].count; k++) {
+            pushMatrix();
+            translate(levels[levelIndex].visualObjs[j].xValues[k], levels[levelIndex].visualObjs[j].yValues[k], min(ellipseObjs[j].w, ellipseObjs[j].h) * sqrt(levels[levelIndex].visualObjs[j].xValues[k] * levels[levelIndex].visualObjs[j].xValues[k] + levels[levelIndex].visualObjs[j].yValues[k] * levels[levelIndex].visualObjs[j].yValues[k]));
+            sphere(levels[levelIndex].visualObjs[j].radii[k]);
+            popMatrix();
+        }
         popMatrix();
     }
     fill(224, 4, 195);
@@ -266,14 +310,6 @@ void draw() {
     translate(levels[levelIndex].endX, levels[levelIndex].endY, 0);
     sphere(levels[levelIndex].endR);
     popMatrix();
-    fill(246, 250, 235, 80);
-    for (int j = 0; j < ellipseObjs.length; j++) {
-        pushMatrix();
-        translate(ellipseObjs[j].x, ellipseObjs[j].y, 0);
-        scale(ellipseObjs[j].w, ellipseObjs[j].h, min(ellipseObjs[j].w, ellipseObjs[j].h));
-        sphere(1);
-        popMatrix();
-    }
     if (playerObj.isColliding(levels[levelIndex].endX, levels[levelIndex].endY, levels[levelIndex].endR)) {
       levelIndex = levels[levelIndex].exitTo;
       levels[levelIndex].startLevel();
