@@ -68,20 +68,18 @@ class visualObj {
     int count;
     
     public visualObj(float w, float h) {
-      count = floor(min (w, h))/10;
+      count = floor(min (w, h) * 0.9);
       xValues = new float[count];
       yValues = new float[count];
       radii = new float[count];
       onBack = new boolean[count];
       for (int j = 0; j < count; j++) {
-        xValues[j] = random(w, -w);
-        yValues[j] = random(h, -h);
-        float len = sqrt(xValues[j] * xValues[j] +  yValues[j] * yValues[j]);
-        xValues[j] *= w/len;
-        yValues[j] *= h/len;
-        len = sqrt((xValues[j] *  xValues[j] +  yValues[j] * yValues[j]));
+        float r = random(0, TWO_PI);
+        float len = random(0.15, 0.85);
+        xValues[j] = sin(r) * w * len;
+        yValues[j] = cos(r) * h * len;
+        radii[j] = random(min(w, h)/3, min(w, h)/2) * ((2 - len) / 2);
         onBack[j] = random(-1, 1) > 0;
-        radii[j] = random(len/2, len/5);
       }
     }
 }
@@ -294,7 +292,7 @@ void draw() {
         popMatrix();
         for (int k = 0; k < levels[levelIndex].visualObjs[j].count; k++) {
             pushMatrix();
-            translate(levels[levelIndex].visualObjs[j].xValues[k], levels[levelIndex].visualObjs[j].yValues[k], min(ellipseObjs[j].w, ellipseObjs[j].h) * sqrt(levels[levelIndex].visualObjs[j].xValues[k] * levels[levelIndex].visualObjs[j].xValues[k] + levels[levelIndex].visualObjs[j].yValues[k] * levels[levelIndex].visualObjs[j].yValues[k]));
+            translate(levels[levelIndex].visualObjs[j].xValues[k], levels[levelIndex].visualObjs[j].yValues[k], min(ellipseObjs[j].w, ellipseObjs[j].h) * (1-sqrt(pow(levels[levelIndex].visualObjs[j].xValues[k] / ellipseObjs[j].w, 2) + pow(levels[levelIndex].visualObjs[j].yValues[k] / ellipseObjs[j].h, 2))) * (levels[levelIndex].visualObjs[j].onBack[k]?-1:1));
             sphere(levels[levelIndex].visualObjs[j].radii[k]);
             popMatrix();
         }
