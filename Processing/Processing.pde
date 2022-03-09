@@ -63,23 +63,33 @@ class player {
 class visualObj {
     float[] xValues;
     float[] yValues;
+    float[] zValues;
     float[] radii;
     boolean[] onBack;
     int count;
     
     public visualObj(float w, float h) {
-      count = floor(min (w, h) * 0.9);
+      count = floor(min (w, h)/2);
       xValues = new float[count];
       yValues = new float[count];
+      zValues = new float[count];
       radii = new float[count];
-      onBack = new boolean[count];
       for (int j = 0; j < count; j++) {
-        float r = random(0, TWO_PI);
-        float len = random(0.15, 0.85);
-        xValues[j] = sin(r) * w * len;
-        yValues[j] = cos(r) * h * len;
-        radii[j] = random(min(w, h)/3, min(w, h)/2) * ((2 - len) / 2);
-        onBack[j] = random(-1, 1) > 0;
+        boolean test = true;
+        while (test) {
+          float r = (count-j) * TWO_PI / count; //random(0, TWO_PI)
+          float len = random(0.25, 0.5);
+          xValues[j] = (sin(r) * min(w, h) * len);
+          yValues[j] = (cos(r) * min(w, h) * len);
+          zValues[j] = random(-5, 5);
+          radii[j] = (1 - len) * min(w, h); // (count - j)* random(min(w, h), min(w, h)/1.1)/count
+          test = false;
+          for (int k = 0; k < j; k++) {
+            if (!test && pow(xValues[k] -xValues[j], 2) + pow(yValues[k] - yValues[j], 2) + pow(zValues[k] - zValues[j], 2) < pow((radii[k] - radii[j])/2, 2)) {
+              test = true;
+            }
+          }
+        }
       }
     }
 }
@@ -287,12 +297,12 @@ void draw() {
         pushMatrix();
         translate(ellipseObjs[j].x, ellipseObjs[j].y, 0);
         pushMatrix();
-        scale(ellipseObjs[j].w, ellipseObjs[j].h, min(ellipseObjs[j].w, ellipseObjs[j].h));
+        scale(ellipseObjs[j].w-10, ellipseObjs[j].h-10, min(ellipseObjs[j].w, ellipseObjs[j].h)-10);
         sphere(1);
         popMatrix();
         for (int k = 0; k < levels[levelIndex].visualObjs[j].count; k++) {
             pushMatrix();
-            translate(levels[levelIndex].visualObjs[j].xValues[k], levels[levelIndex].visualObjs[j].yValues[k], min(ellipseObjs[j].w, ellipseObjs[j].h) * (1-sqrt(pow(levels[levelIndex].visualObjs[j].xValues[k] / ellipseObjs[j].w, 2) + pow(levels[levelIndex].visualObjs[j].yValues[k] / ellipseObjs[j].h, 2))) * (levels[levelIndex].visualObjs[j].onBack[k]?-1:1));
+            translate(levels[levelIndex].visualObjs[j].xValues[k], levels[levelIndex].visualObjs[j].yValues[k], levels[levelIndex].visualObjs[j].zValues[k]);
             sphere(levels[levelIndex].visualObjs[j].radii[k]);
             popMatrix();
         }
