@@ -1,6 +1,14 @@
 // The Flightless Bird
 // By Half-Qilin
 
+float ellipsePerimiter (float x, float y) {
+    float c = PI * (x + y);
+    float t = pow(x-y, 2);
+    float l = pow(x+y, 2);
+    c *= 3 * (t * t)/(l*l*(sqrt(-3 * ((t*t)/(l*l)) +3)+10))+1;
+    return c;
+}
+
 class player {
     float x;
     float xMov = 0;
@@ -69,7 +77,7 @@ class visualObj {
     int count;
     
     public visualObj(float w, float h) {
-      count = floor(min (w, h)/2);
+      count = floor(sqrt(ellipsePerimiter (w, h)));
       xValues = new float[count];
       yValues = new float[count];
       zValues = new float[count];
@@ -79,8 +87,15 @@ class visualObj {
         while (test) {
           float r = (count-j) * TWO_PI / count; //random(0, TWO_PI)
           float len = random(0.25, 0.5);
-          xValues[j] = (sin(r) * min(w, h) * len);
-          yValues[j] = (cos(r) * min(w, h) * len);
+          float temp = min(w, h);
+          xValues[j] = (sin(r) * temp * len);
+          yValues[j] = (cos(r) * temp * len);
+          xValues[j] *= (w/temp);
+          yValues[j] *= (h/temp);
+          xValues[j] *= sqrt(w/temp);
+          yValues[j] *= sqrt(h/temp);
+          xValues[j] *= 1.01;
+          yValues[j] *= 1.01;
           zValues[j] = random(-5, 5);
           radii[j] = (1 - len) * min(w, h); // (count - j)* random(min(w, h), min(w, h)/1.1)/count
           test = false;
